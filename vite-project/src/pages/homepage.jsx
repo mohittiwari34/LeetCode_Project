@@ -12,6 +12,7 @@ function Homepage(){
     const dispatch=useDispatch();
     const {user}=useSelector((state)=>state.auth);
     console.log(user);
+    const[photo,setPhoto]=useState(null);
     const[problems,setProblems]=useState([]);
     const[solvedProblems,setSolvedProblems]=useState([]);
     const[filters,setFilters]=useState({
@@ -24,6 +25,7 @@ function Homepage(){
         const fetchProblems=async()=>{
             try{
             const {data}=await axiosClient.get('/problem/getAllProblem');
+            
             setProblems(data);
             }
             catch(error){
@@ -34,7 +36,9 @@ function Homepage(){
         const fetchSolveProblems=async()=>{
             try{
                 const {data}=await axiosClient.get('/problem/problemSolvedByUser');
-                setSolvedProblems(data);
+                console.log(data);
+                setSolvedProblems(data.problemSolved);
+                setPhoto(data.profilePhoto);
             }
             catch(error){
                 console.log("Eroor fetching problems:",error);
@@ -49,6 +53,7 @@ function Homepage(){
         dispatch(logoutUser());
         setSolvedProblems([]);
     };
+    console.log(photo);
     const filteredProblems=problems.filter(problem=>{
         const difficultyMatch=filters.difficulty==='all'|| problem.difficulty===filters.difficulty;
         const tagMatch=filters.tag=="all" || problem.tags===filters.tag;
@@ -60,12 +65,32 @@ function Homepage(){
 
     return(
         <div>
-            <nav className="navbar bg-base-100 shadow-lg px-4">
+            <nav className="navbar bg-base-100 shadow-lg px-4 flex items-center justify-between">
                 <div>
                     <NavLink to="/" className="btn btn-ghost text-xl">Leetcode</NavLink>
                 </div>
-                <img src={user.profilePhoto} className="w-8 h-8 rounded-full object-cover"/>
-                <ProfilePhotoUpload/>
+                <div>
+                <div className="dropdown dropdown-end">
+                
+                 <label tabIndex={0} className="cursor-pointer">
+                   <img
+                     src={photo || "/default-avatar.png"}
+                     alt="profile"
+                     className="w-9 h-9 rounded-full object-cover ring ring-primary ring-offset-base-100 ring-offset-2"
+                   />
+                                </label>
+               
+                 <ul
+                   tabIndex={0}
+                   className="dropdown-content mt-3 z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
+                 >
+                   <li className="pointer-events-auto">
+                     <ProfilePhotoUpload />
+                   </li>
+                 </ul>
+               </div>
+
+                
                 <div>
                     <div className="dropdown dropdown-end">
                         <div tabIndex={0} className="btn btn-ghost">
@@ -77,7 +102,8 @@ function Homepage(){
                         </ul>
                     </div>
                 </div>
-                <Login></Login>
+                </div>
+                
             </nav>
             {/* Main Content */}
             <div className="container mx-auto p-4">

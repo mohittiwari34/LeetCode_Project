@@ -65,7 +65,7 @@ const login=async(req,res)=>{
             profilePhoto:user.profilePhoto,
         }
 
-        const token=jwt.sign({_id:user._id,emailId:emailId,role:user.role},process.env.JWT_KEY,{expiresIn:60*60});
+        const token=jwt.sign({_id:user._id,emailId:emailId,profilePhoto:user.profilePhoto,role:user.role},process.env.JWT_KEY,{expiresIn:60*60});
         res.cookie('token',token,{maxAge:60*60*1000});
         
         res.status(201).json({

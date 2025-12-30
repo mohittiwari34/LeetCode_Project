@@ -196,7 +196,11 @@ const solvedAllProblembyUser=async(req,res)=>{
             path:"problemSolved",
             select:"_id title difficulty tags"
         });
-        res.status(200).send(user.problemSolved);
+        const reply={
+            problemSolved:user.problemSolved,
+            profilePhoto:user.profilePhoto
+        }
+        res.status(200).send(reply);
     }
     catch(err){
         res.status(500).send("server Eroor");
