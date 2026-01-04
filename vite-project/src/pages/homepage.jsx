@@ -5,12 +5,16 @@ import axiosClient from "../Utils/axiosClient";
 import { logoutUser } from "../authslice";
 import ProfilePhotoUpload from "../component/profilephoto";
 import Login from "./googleLogin";
+import PremiumButton from "../component/premiumButton";
 
 
 
 function Homepage(){
     const dispatch=useDispatch();
     const {user}=useSelector((state)=>state.auth);
+    const ITEMS_PER_PAGE=10;
+    const[currentpage,setCurrentPage]=useState(1);
+    
     console.log(user);
     const[photo,setPhoto]=useState(null);
     const[problems,setProblems]=useState([]);
@@ -20,6 +24,9 @@ function Homepage(){
         tag:'all',
         status:'all'
     });
+    useEffect(()=>{
+        setCurrentPage(1);
+    },[filters]);
 
     useEffect(()=>{
         const fetchProblems=async()=>{
@@ -60,6 +67,11 @@ function Homepage(){
         const statusMatch=filters.status==='all'||solvedProblems.some(sp=>sp.id===problem._id);
         return difficultyMatch&&tagMatch&&statusMatch;
     })
+    const totalPages=Math.ceil(filteredProblems.length/ITEMS_PER_PAGE);
+    const paginatedProblem=filteredProblems.slice(
+        (currentpage-1)*ITEMS_PER_PAGE,
+        currentpage*ITEMS_PER_PAGE
+    )
 
 
 
@@ -68,6 +80,7 @@ function Homepage(){
             <nav className="navbar bg-base-100 shadow-lg px-4 flex items-center justify-between">
                 <div>
                     <NavLink to="/" className="btn btn-ghost text-xl">Leetcode</NavLink>
+                    <PremiumButton></PremiumButton>
                 </div>
                 <div>
                 <div className="dropdown dropdown-end">
@@ -166,6 +179,26 @@ function Homepage(){
                             </div>
                         </div>
                     ))}
+
+                </div>
+                <div className="flex justify-center items-center gap-4 mt-8">
+                    <button
+                    className="btn btn-sm"
+                    onClick={()=>setCurrentPage(prev=>prev-1)}
+                    disabled={currentpage===1}
+                    >
+                        Previous
+                    </button>
+                    <span className="text-sm opacity-70">
+                        page {currentpage} of {totalPages}
+                    </span>
+                    <button
+                    className="btn btn-sm"
+                    onClick={()=>setCurrentPage(prev=>prev+1)}
+                    disabled={currentpage===totalPages}
+                    >
+                    Next
+                    </button>
                 </div>
 
             </div>
