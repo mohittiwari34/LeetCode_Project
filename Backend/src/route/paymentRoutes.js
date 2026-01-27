@@ -1,10 +1,10 @@
-import express from "express";
-import { verifyPayment } from "../controllers/verifyController";
-import { createOrder } from "../controllers/paymentController";
+// import express from "express";
+// import { verifyPayment } from "../controllers/verifyController";
+// import { createOrder } from "../controllers/paymentController";
 
-const Paymentrouter=express.Router();
+// const Paymentrouter=express.Router();
 
-Paymentrouter.post("/create-order",createOrder);
-Paymentrouter.post("/verify",verifyPayment);
+// Paymentrouter.post("/create-order",createOrder);
+// Paymentrouter.post("/verify",verifyPayment);
 
-module.exports=Paymentrouter;
+// module.exports=Paymentrouter;

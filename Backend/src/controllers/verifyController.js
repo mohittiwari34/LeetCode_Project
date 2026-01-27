@@ -1,6 +1,6 @@
-import crypto from "crypto";
-import User from "../models/user";
-import Payment from "../models/Payment";
+// import crypto from "crypto";
+// import User from "../models/user";
+// import Payment from "../models/Payment";
 export const verifyPayment=async (req,res)=>{
     const {
         razorpay_order_id,
