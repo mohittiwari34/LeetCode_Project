@@ -22,6 +22,9 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
+app.get("/", (req, res) => {
+  res.send("LeetCode Project Backend is Running 🚀");
+});
 app.use("/user",authRouter);
 app.use("/auth",authRouter);
 app.use("/problem",problemRouter);
