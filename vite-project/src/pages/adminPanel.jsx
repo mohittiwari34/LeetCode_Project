@@ -9,7 +9,9 @@ const problemSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   descripton: z.string().min(1, 'Description is required'),
   difficulty: z.enum(['easy', 'medium', 'hard']),
-  tags: z.enum(['array', 'linkedList', 'graph', 'dp']),
+
+  tags: z.enum(['array', 'linkedList', 'graph', 'dp','math','queue','stack'])
+  ,
   visibleTestCase: z.array(
     z.object({
       input: z.string().min(1, 'Input is required'),
@@ -23,6 +25,7 @@ const problemSchema = z.object({
       output: z.string().min(1, 'Output is required')
     })
   ).min(1, 'At least one hidden test case required'),
+  
   startCode: z.array(
     z.object({
       language: z.enum(['c++','java', 'javascript']),
@@ -151,6 +154,10 @@ function AdminPanel() {
                   <option value="linkedList">Linked List</option>
                   <option value="graph">Graph</option>
                   <option value="dp">DP</option>
+                  <option value="math">Math</option>
+                  <option value="queue">Queue</option>
+                  <option value="stack">Stack</option>
+
                 </select>
               </div>
             </div>
