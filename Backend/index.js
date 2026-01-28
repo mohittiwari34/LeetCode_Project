@@ -15,19 +15,7 @@ const cors = require('cors')
 // const PaymentRouter=require("./src/route/paymentRoutes");
 
 app.use(cors({
-  origin: function (origin, callback) {
-    const allowedOrigins = [
-      "http://localhost:5173",
-      "https://leet-code-project-gpua.vercel.app"
-    ];
-
-    // allow requests with no origin (like Postman)
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
+  origin: true,
   credentials: true
 }));
 
