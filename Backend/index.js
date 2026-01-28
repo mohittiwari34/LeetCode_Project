@@ -15,7 +15,10 @@ const cors = require('cors')
 // const PaymentRouter=require("./src/route/paymentRoutes");
 
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: [
+    "http://localhost:5173",
+    "https://leet-code-project-quwv.vercel.app"
+  ],
     credentials: true 
 }))
 
