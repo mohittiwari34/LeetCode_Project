@@ -1,0 +1,40 @@
+services:
+  - type: web
+    name: leetcode-backend
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: DB_CONNECT_STRING
+        sync: false
+      - key: JWT_KEY
+        sync: false
+      - key: GEMINI_KEY
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: REDDIS_HOST
+        fromService:
+          type: redis
+          name: leetcode-redis
+          property: host
+      - key: REDDIS_PASS
+        fromService:
+          type: redis
+          name: leetcode-redis
+          property: password
+      - key: FRONTEND_URL
+        sync: false
+
+  - type: redis
+    name: leetcode-redis
+    ipAllowList: [] # only allow internal connections
+    plan: free
+    maxmemoryPolicy: allkeys-lru

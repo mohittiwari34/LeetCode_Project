@@ -7,8 +7,8 @@ import axios from "axios"
 //         'Content-Type': 'application/json'
 //     }
 // });
-const axiosClient =  axios.create({
-    baseURL: 'https://leetcode-project-4-08e1.onrender.com/',
+const axiosClient = axios.create({
+    baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000',
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json'

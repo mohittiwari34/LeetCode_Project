@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 import axiosClient from "../Utils/axiosClient";
 
-function ProfilePhotoUpload() {
+function ProfilePhotoUpload({ onSuccess }) {
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
 
@@ -49,6 +49,10 @@ function ProfilePhotoUpload() {
         secureUrl: uploadRes.data.secure_url,
         publicId: uploadRes.data.public_id,
       });
+
+      if (onSuccess) {
+        onSuccess(uploadRes.data.secure_url);
+      }
 
       reset();
     } catch (err) {

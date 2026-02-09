@@ -1,141 +1,164 @@
 import { useForm } from "react-hook-form"
-import {z} from 'zod';
+import { z } from 'zod';
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
-import {NavLink, useNavigate} from "react-router";
-import {zodResolver} from "@hookform/resolvers/zod";
+import { NavLink, useNavigate } from "react-router";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useState } from "react";
 import { registerUser } from "../authslice";
+import { User, Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 
-const signupSchema=z.object({
-    firstName: z.string().min(3,"Minimun charcter should be 3"), //the second one is messsage variable here
-    emailId: z.string().email("Invalid email"),
-    password:z.string().min(6,"passsword is weak")
+const signupSchema = z.object({
+    firstName: z.string().min(3, "Name must be at least 3 characters"),
+    emailId: z.string().email("Please enter a valid email address"),
+    password: z.string().min(6, "Password must be at least 6 characters")
 });
 
-function Signup(){
-    const[showpassword,setshowpassword]=useState(false);
-    const dispatch=useDispatch();
-    const navigate=useNavigate();
-    const {isauthicated,loading,error}=useSelector((state)=>state.auth);
+function Signup() {
+    const [showpassword, setshowpassword] = useState(false);
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { isauthicated, loading, error } = useSelector((state) => state.auth);
 
-   const {register, handleSubmit,formState: { errors },} = useForm({resolver: zodResolver(signupSchema)});
-   useEffect(()=>{
+    const { register, handleSubmit, formState: { errors }, } = useForm({ resolver: zodResolver(signupSchema) });
+    useEffect(() => {
+        if (isauthicated) {
+            navigate('/');
+        }
+    }, [isauthicated, navigate]);
 
-    if(isauthicated){
-        navigate('/');
-    }
-   },[isauthicated]);
-
-   
-   
-   const onSubmit=(data)=>{
+    const onSubmit = (data) => {
         dispatch(registerUser(data));
     }
-    return(
-        <div className="min-h-screen flex items-center justify-center p-4">
-            <div className="card w-96 bg-base-100 shadow-xl">
-                <div className="card-body">
-                    <h2 className="card-title justify-center text-3xl">Leetcode</h2>
-                    <form onSubmit={handleSubmit(onSubmit)}>
 
+    return (
+        <div className="min-h-screen flex items-center justify-center p-4 bg-base-200 relative overflow-hidden">
+            {/* Background decoration */}
+            <div className="absolute top-0 left-0 w-full h-full overflow-hidden z-0">
+                <div className="absolute top-10 left-10 w-72 h-72 bg-secondary/20 rounded-full blur-3xl"></div>
+                <div className="absolute bottom-10 right-10 w-96 h-96 bg-primary/20 rounded-full blur-3xl"></div>
+            </div>
+
+            <div className="card w-full max-w-md bg-base-100/70 backdrop-blur-lg shadow-2xl border border-white/20 z-10 animate-in fade-in zoom-in duration-500">
+                <div className="card-body p-8">
+                    <div className="text-center mb-6">
+                        <h1 className="text-4xl font-extrabold bg-gradient-to-r from-secondary to-primary bg-clip-text text-transparent mb-2">Create Account</h1>
+                        <p className="text-base-content/60">Join thousands of developers improving their skills</p>
+                    </div>
+
+                    {/* Error Message Display */}
+                    {error && (
+                        <div className="alert alert-error shadow-sm mb-4 p-3 rounded-lg text-sm animate-in shake">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                            </svg>
+                            <span>{error.message || "An error occurred during signup"}</span>
+                        </div>
+                    )}
+
+                    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                        {/* First Name Field */}
                         <div className="form-control">
-                            <label className="label mb-1">
-                                <span className="label-text">First Name</span>
+                            <label className="label">
+                                <span className="label-text font-medium">First Name</span>
                             </label>
-                            <input 
-                            type="text"
-                            placeholder="john"
-                            className={`input input-bordered ${errors.firstName && 'input-error'}`}
-                            {...register('firstName')}
-                            />
+                            <label className={`input input-bordered flex items-center gap-2 ${errors.firstName ? 'input-error' : ''}`}>
+                                <User size={18} className="opacity-50" />
+                                <input
+                                    type="text"
+                                    placeholder="John Doe"
+                                    className="grow"
+                                    {...register('firstName')}
+                                    disabled={loading}
+                                />
+                            </label>
                             {errors.firstName && (
-                                <span className="text-error">{errors.firstName.message}</span>
+                                <div className="text-error text-xs mt-1 ml-1">{errors.firstName.message}</div>
                             )}
-
                         </div>
-                        <div className="form-control mt-4">
-                            <label className="label mb-1">
-                                <span className="label-text">Email</span>
+
+                        {/* Email Field */}
+                        <div className="form-control">
+                            <label className="label">
+                                <span className="label-text font-medium">Email</span>
                             </label>
-                            <input 
-                            type="email"
-                            placeholder="johgcmv@gmail.com"
-                            className={`input input-bordered ${errors.emailId && 'input-error'}`}
-                            {...register('emailId')}
-                            />
-                            {errors.emailId&& (
-                                <span className="text-error">{errors.emailId.message}</span>
+                            <label className={`input input-bordered flex items-center gap-2 ${errors.emailId ? 'input-error' : ''}`}>
+                                <Mail size={18} className="opacity-50" />
+                                <input
+                                    type="email"
+                                    placeholder="john@example.com"
+                                    className="grow"
+                                    {...register('emailId')}
+                                    disabled={loading}
+                                />
+                            </label>
+                            {errors.emailId && (
+                                <div className="text-error text-xs mt-1 ml-1">{errors.emailId.message}</div>
                             )}
-
                         </div>
-                        <div className="form-control mt-4">
-                            <label className="label mb-1">
-                                <span className="label-text">Password</span>
-                            </label>
-                            <div className="relative">
-                            <input 
-                            type={showpassword?"text":"password"}
-                            placeholder="*******"
-                            className={`input input-bordered  w-full pr-10 ${errors.password && 'input-error'}`}
-                            {...register('password')}
-                            />
-                            <button
-                            type="button"
-                            className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                            onClick={()=>setshowpassword(!showpassword)}
-                            aria-label={showpassword?"Hide password":"Show password"}>
-                                {showpassword ?(
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                    </svg>
-                                ):(
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
 
-                                )}
-                            </button>
-                            </div>
+                        {/* Password Field */}
+                        <div className="form-control">
+                            <label className="label">
+                                <span className="label-text font-medium">Password</span>
+                            </label>
+                            <label className={`input input-bordered flex items-center gap-2 ${errors.password ? 'input-error' : ''}`}>
+                                <Lock size={18} className="opacity-50" />
+                                <input
+                                    type={showpassword ? "text" : "password"}
+                                    placeholder="••••••••"
+                                    className="grow"
+                                    {...register('password')}
+                                    disabled={loading}
+                                />
+                                <button
+                                    type="button"
+                                    className="btn btn-circle btn-ghost btn-xs opacity-70"
+                                    onClick={() => setshowpassword(!showpassword)}
+                                    disabled={loading}
+                                >
+                                    {showpassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                                </button>
+                            </label>
                             {errors.password && (
-                                <span className="text-error">{errors.password.message}</span>
+                                <div className="text-error text-xs mt-1 ml-1">{errors.password.message}</div>
                             )}
+                        </div>
 
+                        {/* Submit Button */}
+                        <div className="form-control mt-6">
+                            <button
+                                type="submit"
+                                className="btn btn-primary w-full shadow-lg shadow-primary/30"
+                                disabled={loading}
+                            >
+                                {loading ? (
+                                    <>
+                                        <Loader2 size={18} className="animate-spin mr-2" />
+                                        Creating Account...
+                                    </>
+                                ) : 'Create Account'}
+                            </button>
                         </div>
-                        <div className="form-control mt-6 flex justify-center">
-                            <button type="submit" className=
-                            {`btn btn-primary ${loading?'loading' : ''}`} disabled={loading}>{loading?'Signing Up':'Sign Up'}</button>
-                        </div>
-                        <div className="text-center mt-6">
-                            <span className="text-sm">
+
+                        {/* Login Link */}
+                        <div className="text-center pt-4">
+                            <span className="text-sm opacity-70">
                                 Already have an account?{' '}
-                                <NavLink to="/login" className="link link-primary">Login</NavLink>
+                                <NavLink
+                                    to="/login"
+                                    className="link link-primary font-bold hover:underline"
+                                >
+                                    Sign In
+                                </NavLink>
                             </span>
-
                         </div>
                     </form>
-                    
                 </div>
-
             </div>
         </div>
     )
 }
 
 export default Signup
-
-// {/* <form onSubmit={handleSubmit(submittedData)}>
-//             <input {...register('firstName')}
-//             placeholder="Enter Name"/>
-//             <input {...register('email')}
-//             placeholder="Enter Email"/>
-
-//             <input {...register('password')}
-//             placeholder="Enter Password"/>
-//             <button type="submit" className="btn btn-lg">Submit</button>
-//         </form> */}
-
-
-//error looks like this {exists:...,message:....}

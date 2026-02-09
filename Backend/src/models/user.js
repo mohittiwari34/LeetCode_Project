@@ -39,19 +39,32 @@ const userSchema=new Schema({
         enum:["local","google"],
         default:"local",
     },
+
     password:{
         type:String,
-        required:function(){
-            return this.provider==="local";
-        }
+        required: true
+        // required:function(){
+        //     return this.provider==="local";
+        // }
     },
     problemSolved:{
-        type:[{
-            type:Schema.Types.ObjectId,
-            ref:'problem',
-            unique:true
-        }],
-        
+    type:[{
+        type:Schema.Types.ObjectId,
+        ref:'problem'
+    }],
+    default:[]
+    },
+    currentStreak: {
+    type: Number,
+    default: 0
+    },
+    longestStreak: {
+      type: Number,
+      default: 0
+    },
+    lastActiveDate: {
+      type: Date,
+      default: null
     },
     profilePhoto:{
         // url:{
