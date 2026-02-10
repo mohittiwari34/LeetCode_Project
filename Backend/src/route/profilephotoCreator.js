@@ -1,10 +1,10 @@
-const express=require('express');
-const adminMiddleware=require('../middleware/adminMiddleware');
-const profileRouter=express.Router();
+const express = require('express');
+const userMiddleware = require('../middleware/userMiddleware');
+const profileRouter = express.Router();
 
-const {photoUploadSignature,saveProfileimage}=require("../controllers/profilePhoto");
+const { photoUploadSignature, saveProfileimage } = require("../controllers/profilePhoto");
 
-profileRouter.get("/create-signature",adminMiddleware,photoUploadSignature);
-profileRouter.post("/save-photo",adminMiddleware,saveProfileimage);
+profileRouter.get("/create-signature", userMiddleware, photoUploadSignature);
+profileRouter.post("/save-photo", userMiddleware, saveProfileimage);
 
-module.exports=profileRouter
+module.exports = profileRouter
