@@ -28,7 +28,7 @@ const register = async (req, res) => {
             _id: user._id,
             role: user.role,
         }
-        res.cookie('token', token, { maxAge: 60 * 60 * 1000 });
+        res.cookie('token', token, { maxAge: 60 * 60 * 1000, httpOnly: true, secure: true, sameSite: 'None' });
         res.status(201).json({
             user: reply,
             message: "Register Succesfully"
@@ -72,7 +72,7 @@ const login = async (req, res) => {
         }
 
         const token = jwt.sign({ _id: user._id, emailId: emailId, profilePhoto: user.profilePhoto, role: user.role }, process.env.JWT_KEY, { expiresIn: 60 * 60 });
-        res.cookie('token', token, { maxAge: 60 * 60 * 1000 });
+        res.cookie('token', token, { maxAge: 60 * 60 * 1000, httpOnly: true, secure: true, sameSite: 'None' });
 
         res.status(201).json({
             user: reply,
@@ -126,7 +126,7 @@ const googleLogin = async (req, res) => {
         //     })
         // }
         console.log(token);
-        res.cookie('token', token, { maxAge: 60 * 60 * 1000 });
+        res.cookie('token', token, { maxAge: 60 * 60 * 1000, httpOnly: true, secure: true, sameSite: 'None' });
 
 
         res.status(200).json({
@@ -146,7 +146,7 @@ const logout = async (req, res) => {
         const payload = jwt.decode(token);
         await redisClient.set(`token:${token}`, 'Blocked');
         await redisClient.expireAt(`token:${token}`, payload.exp);
-        res.cookie("token", null, { expires: new Date(Date.now()) });
+        res.cookie("token", null, { expires: new Date(Date.now()), httpOnly: true, secure: true, sameSite: 'None' });
         res.send("Logged Out Succesfully");
 
     }
@@ -163,7 +163,7 @@ const adminRegister = async (req, res) => {
         user.role = "admin";
         await user.save();
         const token = jwt.sign({ _id: user._id, emailId: emailId, role: 'admin' }, process.env.JWT_KEY, { expiresIn: 60 * 60 });
-        res.cookie('token', token, { maxAge: 60 * 60 * 1000 });
+        res.cookie('token', token, { maxAge: 60 * 60 * 1000, httpOnly: true, secure: true, sameSite: 'None' });
         res.status(201).send("User Registered Succesfully");
 
     }
