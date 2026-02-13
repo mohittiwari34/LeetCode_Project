@@ -146,10 +146,11 @@ function Homepage() {
                     </p>
 
                     {/* Filters Bar */}
+                    {/* Filters Bar */}
                     <div className="flex flex-wrap gap-4 justify-center bg-base-100 p-4 rounded-2xl shadow-lg border border-base-300 max-w-4xl mx-auto">
-                        <div className="join">
+                        <div className="join join-vertical md:join-horizontal w-full md:w-auto">
                             <select
-                                className="select select-bordered join-item focus:outline-none"
+                                className="select select-bordered join-item focus:outline-none w-full md:w-auto"
                                 value={filters.status}
                                 onChange={(e) => setFilters({ ...filters, status: e.target.value })}
                             >
@@ -159,7 +160,7 @@ function Homepage() {
                             </select>
 
                             <select
-                                className="select select-bordered join-item focus:outline-none"
+                                className="select select-bordered join-item focus:outline-none w-full md:w-auto"
                                 value={filters.difficulty}
                                 onChange={(e) => setFilters({ ...filters, difficulty: e.target.value })}
                             >
@@ -170,7 +171,7 @@ function Homepage() {
                             </select>
 
                             <select
-                                className="select select-bordered join-item focus:outline-none"
+                                className="select select-bordered join-item focus:outline-none w-full md:w-auto"
                                 value={filters.tag}
                                 onChange={(e) => setFilters({ ...filters, tag: e.target.value })}
                             >

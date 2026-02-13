@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router';
-import { Layers, Box, GitBranch, Database, Activity, Code, Cpu, Globe, Hash, Layout, Repeat, GitMerge, Zap, Percent } from 'lucide-react';
+import { Layers, GitBranch, Code, Globe, Activity, Layout, Repeat, GitMerge, Zap, Percent, RotateCcw } from 'lucide-react';
 
 const topics = [
     { id: 'Array', name: 'Array', icon: Layers, color: 'from-blue-500 to-cyan-500', desc: 'Fundamental data structures' },
@@ -16,14 +16,10 @@ const topics = [
     { id: 'Sliding Window', name: 'Sliding Window', icon: Layout, color: 'from-violet-500 to-fuchsia-500', desc: 'Subarray problems' },
     { id: 'Greedy', name: 'Greedy', icon: Zap, color: 'from-yellow-400 to-amber-500', desc: 'Local optimal choices' },
 ];
-// Need to import RotateCcw separately/fix import above if it wasn't there. 
-// Actually I missed RotateCcw in the top import. I'll fix that in the actual write or just use another icon for now to be safe. "Reply" or something.
-
-import { RotateCcw } from 'lucide-react';
 
 const TopicsPage = () => {
     return (
-        <div className="min-h-screen bg-base-200 p-8 pt-24 font-sans">
+        <div className="min-h-screen bg-base-200 px-4 pt-20 pb-8 md:p-8 md:pt-24 font-sans">
             <div className="text-center mb-12">
                 <h1 className="text-4xl md:text-5xl font-extrabold mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
                     Explore Topics
@@ -40,7 +36,7 @@ const TopicsPage = () => {
                         <NavLink
                             to={`/problems/${topic.id}`}
                             key={topic.id}
-                            className="group relative overflow-hidden rounded-2xl bg-base-100 shadow-lg hover:shadow-2xl transition-all duration-300 border border-base-200 p-6 flex flex-col gap-4 hover:-translate-y-1"
+                            className="group relative overflow-hidden rounded-2xl bg-base-100 shadow-lg hover:shadow-2xl transition-all duration-300 border border-base-200 p-6 flex flex-col gap-4 hover:-translate-y-1 hover:border-primary/50"
                         >
                             <div className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${topic.color} opacity-10 rounded-bl-full group-hover:scale-150 transition-transform duration-500`}></div>
 

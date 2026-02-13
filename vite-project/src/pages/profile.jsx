@@ -106,8 +106,8 @@ function Profile() {
               </div>
 
               {/* Right Column: Key Stats */}
-              <div className="flex-none md:w-[480px]">
-                <div className="stats shadow-lg w-full bg-base-100 border border-base-200 overflow-hidden">
+              <div className="flex-none w-full md:w-[480px]">
+                <div className="stats stats-vertical lg:stats-horizontal shadow-lg w-full bg-base-100 border border-base-200 overflow-hidden">
                   <div className="stat transition-colors hover:bg-base-200/50">
                     <div className="stat-figure text-primary/20">
                       <Code size={48} strokeWidth={1.5} />

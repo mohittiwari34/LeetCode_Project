@@ -40,9 +40,9 @@ function Login() {
             </div>
 
             <div className="card w-full max-w-md bg-base-100/70 backdrop-blur-lg shadow-2xl border border-white/20 z-10 animate-in fade-in zoom-in duration-500">
-                <div className="card-body p-8">
+                <div className="card-body p-6 md:p-8">
                     <div className="text-center mb-6">
-                        <h1 className="text-4xl font-extrabold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
+                        <h1 className="text-3xl md:text-4xl font-extrabold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
                             Welcome Back
                         </h1>
                         <p className="text-base-content/60">Enter your credentials to access your account</p>

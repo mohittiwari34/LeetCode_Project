@@ -200,9 +200,9 @@ const ProblemPage = () => {
         </div>
       </header>
 
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
         {/* Left Panel - Problem Details */}
-        <div className="w-1/2 flex flex-col border-r border-base-300 bg-base-100/50 backdrop-blur-sm">
+        <div className="w-full md:w-1/2 h-1/2 md:h-full flex flex-col border-r border-base-300 bg-base-100/50 backdrop-blur-sm order-2 md:order-1">
           {/* Custom Tabs */}
           <div className="flex items-center gap-1 p-2 bg-base-200/50 border-b border-base-300 overflow-x-auto no-scrollbar">
             {[
@@ -215,7 +215,7 @@ const ProblemPage = () => {
               <button
                 key={tab.id}
                 onClick={() => setActiveLeftTab(tab.id)}
-                className={`btn btn-sm btn-ghost gap-2 rounded-lg transition-all ${activeLeftTab === tab.id ? 'bg-base-100 shadow-sm text-primary' : 'text-base-content/60 hover:text-base-content'
+                className={`btn btn-sm btn-ghost gap-2 rounded-lg transition-all flex-shrink-0 ${activeLeftTab === tab.id ? 'bg-base-100 shadow-sm text-primary' : 'text-base-content/60 hover:text-base-content'
                   }`}
               >
                 <tab.icon size={14} />
@@ -224,7 +224,7 @@ const ProblemPage = () => {
             ))}
           </div>
 
-          <div className="flex-1 overflow-y-auto p-6 scroll-smooth">
+          <div className="flex-1 overflow-y-auto p-4 md:p-6 scroll-smooth">
             {activeLeftTab === 'description' && (
               <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
                 <div className="flex items-center gap-3 mb-6">
@@ -326,7 +326,7 @@ const ProblemPage = () => {
         </div>
 
         {/* Right Panel - Code Editor */}
-        <div className="w-1/2 flex flex-col bg-[#1e1e1e] relative">
+        <div className="w-full md:w-1/2 h-1/2 md:h-full flex flex-col bg-[#1e1e1e] relative order-1 md:order-2 border-b md:border-b-0 md:border-l border-[#333]">
           {/* Editor Header */}
           <div className="flex justify-between items-center bg-[#1e1e1e] border-b border-[#333] p-2 px-4 shadow-sm z-10 basis-12 flex-none">
             <div className="flex items-center gap-4">

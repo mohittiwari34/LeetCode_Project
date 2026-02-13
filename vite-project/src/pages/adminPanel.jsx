@@ -97,9 +97,9 @@ function AdminPanel() {
     <div className="min-h-screen bg-base-200 p-4 md:p-8 font-sans">
       <div className="max-w-5xl mx-auto">
 
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-wrap justify-between items-center mb-8 gap-4">
           <div>
-            <h1 className="text-3xl font-extrabold text-base-content">Create New Problem</h1>
+            <h1 className="text-2xl md:text-3xl font-extrabold text-base-content">Create New Problem</h1>
             <p className="opacity-60 text-sm mt-1">Design a new challenge for the community</p>
           </div>
           <button className="btn btn-ghost" onClick={() => navigate('/admin')}>

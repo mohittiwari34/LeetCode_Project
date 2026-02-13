@@ -55,12 +55,12 @@ const TagProblemsPage = () => {
             <div className="container mx-auto max-w-6xl">
 
                 {/* Header */}
-                <div className="flex items-center gap-4 mb-8">
+                <div className="flex flex-wrap items-center gap-4 mb-8">
                     <NavLink to="/problems" className="btn btn-circle btn-ghost">
                         <ChevronLeft size={24} />
                     </NavLink>
                     <div>
-                        <h1 className="text-3xl font-bold flex items-center gap-3">
+                        <h1 className="text-2xl md:text-3xl font-bold flex items-center gap-3">
                             <span className="text-primary">{tag}</span> Problems
                         </h1>
                         <p className="opacity-60 mt-1">
