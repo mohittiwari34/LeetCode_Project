@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form"
 import { z } from 'zod';
-import { loginuser } from "../authslice";
+import { loginuser, clearError } from "../authslice";
 import { useNavigate, NavLink } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -22,10 +22,11 @@ function Login() {
     const { register, handleSubmit, formState: { errors }, } = useForm({ resolver: zodResolver(loginSchema) });
 
     useEffect(() => {
+        dispatch(clearError());
         if (isAuthenticated) {
             navigate("/");
         }
-    }, [isAuthenticated, navigate]);
+    }, [isAuthenticated, navigate, dispatch]);
 
     const onSubmit = (data) => {
         dispatch(loginuser(data));

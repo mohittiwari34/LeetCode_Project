@@ -6,7 +6,7 @@ import { NavLink, useNavigate } from "react-router";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { useState } from "react";
-import { registerUser } from "../authslice";
+import { registerUser, clearError } from "../authslice";
 import { User, Mail, Lock, Eye, EyeOff, Loader2 } from "lucide-react";
 
 const signupSchema = z.object({
@@ -23,10 +23,11 @@ function Signup() {
 
     const { register, handleSubmit, formState: { errors }, } = useForm({ resolver: zodResolver(signupSchema) });
     useEffect(() => {
+        dispatch(clearError());
         if (isauthicated) {
             navigate('/');
         }
-    }, [isauthicated, navigate]);
+    }, [isauthicated, navigate, dispatch]);
 
     const onSubmit = (data) => {
         dispatch(registerUser(data));

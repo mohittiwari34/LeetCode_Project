@@ -1,190 +1,197 @@
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axiosClient from './Utils/axiosClient';
 
-export const registerUser=createAsyncThunk(
+export const registerUser = createAsyncThunk(
     'auth/register',
-    async(userData,{rejectWithValue})=>{
-        try{
+    async (userData, { rejectWithValue }) => {
+        try {
             console.log("hi mohit");
             console.log(userData);
             console.log(userData);
 
-            const response=await axiosClient.post('/user/register',userData);
+            const response = await axiosClient.post('/user/register', userData);
             console.log(response.data.user);
             return response.data.user;
         }
-        catch(error){
+        catch (error) {
             return rejectWithValue("the main thing is here"
             );
         }
     }
 );
-export const loginuser=createAsyncThunk(
+export const loginuser = createAsyncThunk(
     'auth/login',
-    async(credentials,{rejectWithValue})=>{
-        try{
+    async (credentials, { rejectWithValue }) => {
+        try {
             console.log("sunai de rha tu");
-            const response=await axiosClient.post('/user/login',credentials);
+            const response = await axiosClient.post('/user/login', credentials);
             console.log(response.data.user);
             return response.data.user;
 
         }
-        catch(error){
+        catch (error) {
             return rejectWithValue(error);
         }
     }
 );
-export const handleSuccess=createAsyncThunk(
+export const handleSuccess = createAsyncThunk(
     'auth/googleLogin',
-    async(credentials,{rejectWithValue})=>{
-        try{
+    async (credentials, { rejectWithValue }) => {
+        try {
             console.log("hi welcome google login");
-            const response=await axiosClient.post("/auth/google",{
+            const response = await axiosClient.post("/auth/google", {
                 token1: credentials,
             })
-            console.log("User:",response.data);
+            console.log("User:", response.data);
             return response.data.user;
             alert("Login Succesfully");
         }
-        catch(error){
+        catch (error) {
             return rejectWithValue(error);
         }
     }
 )
-export const checkauth=createAsyncThunk(
+export const checkauth = createAsyncThunk(
     'auth/check',
-    async(_,{rejectWithValue})=>{
-        try{
-            const {data}=await axiosClient.get('/user/check');
+    async (_, { rejectWithValue }) => {
+        try {
+            const { data } = await axiosClient.get('/user/check');
             console.log(data);
             return data.user;
 
         }
-        catch(error){
-           if (error.response?.status === 401) {
-        return rejectWithValue(null); // Special case for no session
-    }
-    return rejectWithValue(error);
-        }
-    }
-)
-export const logoutUser=createAsyncThunk(
-    'auth/logut',
-    async(_,{rejectWithValue})=>{
-        try{
-            console.log("logout ka apllication yaha tak pahuch rha ");
-            await axiosClient.post('/user/logout');
-            return null;
-        }
-        catch(error){
+        catch (error) {
+            if (error.response?.status === 401) {
+                return rejectWithValue(null); // Special case for no session
+            }
             return rejectWithValue(error);
         }
     }
 )
-const authSlice=createSlice({
-    name:'auth',
-    initialState:{
-        user:null,
-        isauthicated:false,
-        loading:false,
-        error:null
+export const logoutUser = createAsyncThunk(
+    'auth/logut',
+    async (_, { rejectWithValue }) => {
+        try {
+            console.log("logout ka apllication yaha tak pahuch rha ");
+            await axiosClient.post('/user/logout');
+            return null;
+        }
+        catch (error) {
+            return rejectWithValue(error);
+        }
+    }
+)
+const authSlice = createSlice({
+    name: 'auth',
+    initialState: {
+        user: null,
+        isauthicated: false,
+        loading: false,
+        error: null
     },
-    reducers:{
-
+    reducers: {
+        clearError: (state) => {
+            state.error = null;
+        }
     },
-    extraReducers:(builder)=>{
+    extraReducers: (builder) => {
         builder
-        //register userCases
-        .addCase(registerUser.pending,(state)=>{
-            state.loading=true;
-            state.error=null;
-        })
-        .addCase(registerUser.fulfilled,(state,action)=>{
-            state.loading=false;
-            state.isauthicated=!!action.payload;
-            state.user=action.payload;
+            //register userCases
+            .addCase(registerUser.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(registerUser.fulfilled, (state, action) => {
+                state.loading = false;
+                state.isauthicated = !!action.payload;
+                state.user = action.payload;
 
-        })
-        .addCase(registerUser.rejected,(state,action)=>{
-            state.loading=false;
-            state.error=action.payload?.message||"something went wrong";
-            state.isauthicated=false;
-            state.user=null;
-        })
+            })
+            .addCase(registerUser.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload?.message || "something went wrong";
+                state.isauthicated = false;
+                state.user = null;
+            })
 
-        //login userCases
+            //login userCases
 
-        .addCase(loginuser.pending,(state)=>{
-            state.loading=true;
-            state.error=null;
-        })
-        .addCase(loginuser.fulfilled,(state,action)=>{
-            state.loading=false;
-            state.isauthicated=!!action.payload;
-            state.user=action.payload;
+            .addCase(loginuser.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(loginuser.fulfilled, (state, action) => {
+                state.loading = false;
+                state.isauthicated = !!action.payload;
+                state.user = action.payload;
 
-        })
-        .addCase(loginuser.rejected,(state,action)=>{
-            state.loading=false;
-            state.error=action.payload?.message||"something went wrong";
-            state.isauthicated=false;
-            state.user=null;
-        })
+            })
+            .addCase(loginuser.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload?.message || "something went wrong";
+                state.isauthicated = false;
+                state.user = null;
+            })
 
-        //google Login
-        .addCase(handleSuccess.pending,(state)=>{
-            state.loading=true;
-            state.error=null;
-        })
-        .addCase(handleSuccess.fulfilled,(state,action)=>{
-            state.loading=false;
-            state.isauthicated=!!action.payload;
-            state.user=action.payload;
-        })
-        .addCase(handleSuccess.rejected,(state,action)=>{
-            state.loading=false;
-            state.error=action.payload?.message||"something went wrong";
-            state.isauthicated=false;
-            state.user=null;
-        })
-        
+            //google Login
+            .addCase(handleSuccess.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(handleSuccess.fulfilled, (state, action) => {
+                state.loading = false;
+                state.isauthicated = !!action.payload;
+                state.user = action.payload;
+            })
+            .addCase(handleSuccess.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload?.message || "something went wrong";
+                state.isauthicated = false;
+                state.user = null;
+            })
 
-        //check auth cases
 
-        .addCase(checkauth.pending,(state)=>{
-            state.loading=true;
-            state.error=null;
-        })
-        .addCase(checkauth.fulfilled,(state,action)=>{
-            state.loading=false;
-            state.isauthicated=!!action.payload;
-            state.user=action.payload;
+            //check auth cases
 
-        })
-        .addCase(checkauth.rejected,(state,action)=>{
-            state.loading=false;
-            state.error=action.payload?.message||"something went wrong";
-            state.isauthicated=false;
-            state.user=null;
-        })
-        //logout csess handeling
+            .addCase(checkauth.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(checkauth.fulfilled, (state, action) => {
+                state.loading = false;
+                state.isauthicated = !!action.payload;
+                state.user = action.payload;
 
-        .addCase(logoutUser.pending,(state)=>{
-            state.loading=true;
-            state.error=null;
-        })
-        .addCase(logoutUser.fulfilled,(state,action)=>{
-            state.loading=false;
-            state.isauthicated=!!action.payload;
-            state.user=action.payload;
+            })
+            .addCase(checkauth.rejected, (state, action) => {
+                state.loading = false;
+                if (action.payload === null) {
+                    state.error = null; // No error for 401
+                } else {
+                    state.error = action.payload?.message || "something went wrong";
+                }
+                state.isauthicated = false;
+                state.user = null;
+            })
+            //logout csess handeling
 
-        })
-        .addCase(logoutUser.rejected,(state,action)=>{
-            state.loading=false;
-            state.error=action.payload?.message||"something went wrong";
-            state.isauthicated=false;
-            state.user=null;
-        })
+            .addCase(logoutUser.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(logoutUser.fulfilled, (state, action) => {
+                state.loading = false;
+                state.isauthicated = !!action.payload;
+                state.user = action.payload;
+
+            })
+            .addCase(logoutUser.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.payload?.message || "something went wrong";
+                state.isauthicated = false;
+                state.user = null;
+            })
     }
 })
+export const { clearError } = authSlice.actions;
 export default authSlice.reducer;
