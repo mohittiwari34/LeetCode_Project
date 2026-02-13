@@ -11,7 +11,7 @@ const problemSchema = z.object({
   descripton: z.string().min(1, 'Description is required'),
   difficulty: z.enum(['easy', 'medium', 'hard']),
 
-  tags: z.enum(['array', 'linkedlist', 'graph', 'dp', 'math', 'queue', 'stack'])
+  tags: z.enum(['array', 'linkedlist', 'graph', 'dp', 'math', 'queue', 'stack', 'tree', 'string', 'backtracking', 'slidingWindow', 'greedy', 'binarySearch', 'heap', 'bitManipulation'])
   ,
   visibleTestCase: z.array(
     z.object({
@@ -177,6 +177,14 @@ function AdminPanel() {
                     <option value="math">Math</option>
                     <option value="queue">Queue</option>
                     <option value="stack">Stack</option>
+                    <option value="tree">Tree</option>
+                    <option value="string">String</option>
+                    <option value="backtracking">Backtracking</option>
+                    <option value="slidingWindow">Sliding Window</option>
+                    <option value="greedy">Greedy</option>
+                    <option value="binarySearch">Binary Search</option>
+                    <option value="heap">Heap</option>
+                    <option value="bitManipulation">Bit Manipulation</option>
                   </select>
                 </div>
               </div>
