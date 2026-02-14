@@ -6,7 +6,7 @@ const PaymentButton = ({ className = "" }) => {
   const handlePayment = async () => {
     try {
       const response = await axiosClient.post("/payment/create-order", {
-        amount: 4
+        amount: 49
       });
       console.log(response);
 
