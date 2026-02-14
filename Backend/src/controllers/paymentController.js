@@ -6,6 +6,12 @@ const crypto = require("crypto");
 
 const createOrder = async (req, res) => {
     try {
+        if (!razorpay) {
+            return res.status(503).json({
+                success: false,
+                message: "Payment service unavailable (Configuration missing)"
+            });
+        }
         const { amount } = req.body;
         console.log(amount);
 
