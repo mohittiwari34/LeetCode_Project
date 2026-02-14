@@ -11,8 +11,9 @@ const submitRouter = require('./src/models/submit');
 const aiRouter = require('./src/route/aiChatting')
 const videRouter = require("./src/route/videoCreator");
 const profileRouter = require("./src/route/profilephotoCreator")
-const cors = require('cors')
-// const PaymentRouter=require("./src/route/paymentRoutes");
+const PaymentRouter = require("./src/route/paymentRoutes");
+const cors = require('cors');
+
 
 app.use(cors({
   origin: process.env.FRONTEND_URL || "http://localhost:5173",
@@ -33,7 +34,8 @@ app.use('/submission', submitRouter);
 app.use('/ai', aiRouter);
 app.use("/video", videRouter);
 app.use("/profile", profileRouter);
-// app.use("/payment",PaymentRouter);
+app.use("/payment", PaymentRouter);
+
 
 const InitalizeConnection = async () => {
   try {

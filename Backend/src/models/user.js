@@ -1,72 +1,73 @@
-const mongoose=require('mongoose');
-const {Schema}=mongoose;
+const mongoose = require('mongoose');
+const { type } = require('os');
+const { Schema } = mongoose;
 
-const userSchema=new Schema({
-    firstName:{
-        type:String,
-        required:true,
-        minLength:3,
-        maxLength:20
-
-    },
-    lastName:{
-        type:String,
-        minLength:3,
-        maxLength:20
+const userSchema = new Schema({
+    firstName: {
+        type: String,
+        required: true,
+        minLength: 3,
+        maxLength: 20
 
     },
-    emailId:{
-        type:String,
-        required:true,
-        unique:true,
-        trim:true,
-        lowercase:true,
-        immutable:true,
+    lastName: {
+        type: String,
+        minLength: 3,
+        maxLength: 20
 
     },
-    age:{
-        type:Number,
-        min:6,
-        max:90,
+    emailId: {
+        type: String,
+        required: true,
+        unique: true,
+        trim: true,
+        lowercase: true,
+        immutable: true,
+
     },
-    role:{
-        type:String,
-        enum:['user','admin'],
-        default:'user'
+    age: {
+        type: Number,
+        min: 6,
+        max: 90,
     },
-    provider:{
-        type:String,
-        enum:["local","google"],
-        default:"local",
+    role: {
+        type: String,
+        enum: ['user', 'admin'],
+        default: 'user'
+    },
+    provider: {
+        type: String,
+        enum: ["local", "google"],
+        default: "local",
     },
 
-    password:{
-        type:String,
+    password: {
+        type: String,
         required: true
         // required:function(){
         //     return this.provider==="local";
         // }
     },
-    problemSolved:{
-    type:[{
-        type:Schema.Types.ObjectId,
-        ref:'problem'
-    }],
-    default:[]
+    problemSolved: {
+        type: [{
+            type: Schema.Types.ObjectId,
+            ref: 'problem'
+        }],
+        default: []
     },
     currentStreak: {
-    type: Number,
-    default: 0
+        type: Number,
+        default: 0
     },
     longestStreak: {
-      type: Number,
-      default: 0
+        type: Number,
+        default: 0
     },
     lastActiveDate: {
-      type: Date,
-      default: null
+        type: Date,
+        default: null
     },
-    profilePhoto:{
+    profilePhoto: {
         // url:{
         //     type:String,
         //     default:"",
@@ -75,17 +76,25 @@ const userSchema=new Schema({
         //     type:String,
         //     default:"",
         // }
-        type:String,
-        default:""
+        type: String,
+        default: ""
+    },
+    isPremium: {
+        type: Boolean,
+        default: false
+    },
+    premiumExpiryDate: {
+        type: Date,
+        default: null
     }
 
-},{
-    timestamps:true
+}, {
+    timestamps: true
 });
-userSchema.post('findOneAndDelete',async function (userInfo){
-    if(userInfo){
-        await mongoose.model('submission').deleteMany({userId:userInfo._id});
+userSchema.post('findOneAndDelete', async function (userInfo) {
+    if (userInfo) {
+        await mongoose.model('submission').deleteMany({ userId: userInfo._id });
     }
 })
-const User=mongoose.model("user",userSchema);
-module.exports=User;
+const User = mongoose.models.user || mongoose.model("user", userSchema);
+module.exports = User;

@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: leetcode-backend
+    name: codeforge-backend
     env: node
     plan: free
     buildCommand: npm install
@@ -23,18 +23,18 @@ services:
       - key: REDDIS_HOST
         fromService:
           type: redis
-          name: leetcode-redis
+          name: codeforge-redis
           property: host
       - key: REDDIS_PASS
         fromService:
           type: redis
-          name: leetcode-redis
+          name: codeforge-redis
           property: password
       - key: FRONTEND_URL
         sync: false
 
   - type: redis
-    name: leetcode-redis
+    name: codeforge-redis
     ipAllowList: [] # only allow internal connections
     plan: free
     maxmemoryPolicy: allkeys-lru

@@ -32,7 +32,7 @@ authRouter.get("/check", userMiddleware, async (req, res) => {
 
     // fetch FULL user from database
     const user = await User.findById(userId).select(
-      "firstName emailId role profilePhoto problemSolved currentStreak longestStreak lastActiveDate"
+      "firstName emailId role profilePhoto problemSolved currentStreak longestStreak lastActiveDate isPremium premiumExpiryDate"
     );
 
     if (!user) {
@@ -48,6 +48,8 @@ authRouter.get("/check", userMiddleware, async (req, res) => {
         role: user.role,
         profilePhoto: user.profilePhoto,
         problemSolved: user.problemSolved,
+        isPremium: user.isPremium,
+        premiumExpiryDate: user.premiumExpiryDate
 
       },
     });

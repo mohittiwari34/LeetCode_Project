@@ -146,31 +146,45 @@ const getProblemById = async (req, res) => {
     const { id } = req.params;
     try {
         if (!id) {
-            return res.ststus(400).send("Id is Missing");
+            return res.status(400).send("Id is Missing");
+            // TYPO FIX: ststus -> status
         }
+
+        // Fetch the problem
         const getProblem = await Problem.findById(id).select('_id title descripton difficulty tags visibleTestCase startCode refrenceSolution');
-        //console.log(getProblem);
-        //video ka jo bhi url wagera le aao
+
         if (!getProblem) {
             return res.status(404).send("problem is missing");
         }
-        const Video = await SolutionVideo.findOne({ problemId: id });
-        console.log(Video);
-        if (Video) {
-            // getProblem.secureUrl=secureUrl;
-            // getProblem.cloudinaryPublicId=cloudinaryPublicId;
-            // getProblem.thumbnailUrl=thumbnailUrl;
-            // getProblem.duration=duartion;
-            // return res.status(200).send(getProblem); 
-            const responseData = {
-                ...getProblem.toObject(),
-                secureUrl: Video.secureUrl,
-                thumbnailUrl: Video.thumbnailUrl,
-                duration: Video.duration,
-            }
+
+        // Check Premium Status
+        const user = req.result; // populated by userMiddleware
+        const isPremium = user && user.isPremium;
+
+        // Prepare Base Response
+        let responseData = {
+            ...getProblem.toObject(),
+            isPremiumAccess: isPremium || false
+        };
+
+        // If NOT Premium, redact reference solutions
+        if (!isPremium) {
+            responseData.refrenceSolution = []; // Hide solutions
+            // We don't fetch video if not premium
             return res.status(200).send(responseData);
         }
-        res.status(200).send(getProblem);
+
+        // If Premium, fetch Video details
+        const Video = await SolutionVideo.findOne({ problemId: id });
+        console.log(Video);
+
+        if (Video) {
+            responseData.secureUrl = Video.secureUrl;
+            responseData.thumbnailUrl = Video.thumbnailUrl;
+            responseData.duration = Video.duration;
+        }
+
+        return res.status(200).send(responseData);
     }
     catch (err) {
         res.status(500).send("Error: " + err);

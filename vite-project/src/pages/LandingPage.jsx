@@ -10,7 +10,7 @@ const LandingPage = () => {
                 <div className="container mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
                     <NavLink to="/" className="flex items-center gap-2 text-xl md:text-2xl font-bold text-primary">
                         <Code2 className="w-6 h-6 md:w-8 md:h-8" />
-                        LeetCode 2.0
+                        CodeForge
                     </NavLink>
                     <div className="flex items-center gap-2 md:gap-4">
                         <NavLink to="/login" className="btn btn-ghost btn-sm">
@@ -151,7 +151,7 @@ const LandingPage = () => {
                     <a className="link link-hover">Press kit</a>
                 </nav>
                 <aside>
-                    <p>Copyright © {new Date().getFullYear()} - All right reserved by LeetCode 2.0</p>
+                    <p>Copyright © {new Date().getFullYear()} - All right reserved by CodeForge</p>
                 </aside>
             </footer>
         </div>

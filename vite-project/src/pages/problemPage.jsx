@@ -7,6 +7,7 @@ import SubmissionHistory from '../component/submissionHistory';
 import ChatAi from '../component/chatAi';
 import Editorial from '../component/Editorial';
 import { Play, Send, CheckCircle, XCircle, RotateCcw, MessageSquare, FileText, Code2, History, ChevronLeft, Menu } from 'lucide-react';
+import LockedContent from '../component/LockedContent';
 
 const langMap = {
   cpp: 'c++',
@@ -277,11 +278,18 @@ const ProblemPage = () => {
             {activeLeftTab === 'editorial' && (
               <div className="animate-in fade-in slide-in-from-bottom-2 duration-300">
                 <h2 className="text-2xl font-bold mb-6">Editorial</h2>
-                <div className="alert bg-base-200/50 border border-base-300">
-                  <div className="w-full">
-                    <Editorial secureUrl={problem.secureUrl} thumbnailUrl={problem.thumbnailUrl} duration={problem.duration} />
+                {problem.isPremiumAccess ? (
+                  <div className="alert bg-base-200/50 border border-base-300">
+                    <div className="w-full">
+                      <Editorial secureUrl={problem.secureUrl} thumbnailUrl={problem.thumbnailUrl} duration={problem.duration} />
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <LockedContent
+                    title="Editorial Locked"
+                    description="Unlock premium access to watch the video editorial for this problem."
+                  />
+                )}
               </div>
             )}
 
@@ -290,21 +298,28 @@ const ProblemPage = () => {
                 <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
                   <Code2 size={24} className="text-primary" /> Reference Solutions
                 </h2>
-                <div className="space-y-6">
-                  {problem.refrenceSolution?.map((solution, index) => (
-                    <div key={index} className="mockup-code bg-[#1e1e1e] border border-base-300 shadow-lg text-sm">
-                      <div className="flex justify-between items-center px-4 -mt-2 mb-4">
-                        <span className="badge badge-primary badge-outline text-xs">{solution?.language}</span>
+                {problem.isPremiumAccess ? (
+                  <div className="space-y-6">
+                    {problem.refrenceSolution?.map((solution, index) => (
+                      <div key={index} className="mockup-code bg-[#1e1e1e] border border-base-300 shadow-lg text-sm">
+                        <div className="flex justify-between items-center px-4 -mt-2 mb-4">
+                          <span className="badge badge-primary badge-outline text-xs">{solution?.language}</span>
+                        </div>
+                        <pre><code>{solution?.completeCode}</code></pre>
                       </div>
-                      <pre><code>{solution?.completeCode}</code></pre>
-                    </div>
-                  )) || (
-                      <div className="text-center py-10 opacity-50 border-2 border-dashed border-base-300 rounded-xl">
-                        <Code2 size={48} className="mx-auto mb-2 opacity-50" />
-                        <p>No reference solutions available yet.</p>
-                      </div>
-                    )}
-                </div>
+                    )) || (
+                        <div className="text-center py-10 opacity-50 border-2 border-dashed border-base-300 rounded-xl">
+                          <Code2 size={48} className="mx-auto mb-2 opacity-50" />
+                          <p>No reference solutions available yet.</p>
+                        </div>
+                      )}
+                  </div>
+                ) : (
+                  <LockedContent
+                    title="Solution Locked"
+                    description="Upgrade to Premium to view the reference solution code for this problem."
+                  />
+                )}
               </div>
             )}
 

@@ -94,7 +94,7 @@ function Homepage() {
             <nav className="navbar bg-base-100/80 backdrop-blur-md fixed top-0 left-0 w-full z-50 px-4 md:px-8 border-b border-base-300">
                 <div className="flex-1 flex items-center gap-6">
                     <NavLink to="/" className="btn btn-ghost text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent hover:bg-transparent">
-                        LeetCode 2.0
+                        CodeForge
                     </NavLink>
                     <div className="hidden md:flex gap-1">
                         <NavLink to="/" className={({ isActive }) => `btn btn-sm btn-ghost ${isActive ? 'bg-base-200' : ''}`}>
@@ -106,16 +106,20 @@ function Homepage() {
                     </div>
                 </div>
                 <div className="flex-none flex items-center gap-2 md:gap-4 pr-2">
-                    <div className="hidden md:block">
-                        <PremiumButton />
-                    </div>
-                    <div className="md:hidden">
-                        {/* Mobile simplified premium button if possible or just show icon - but PremiumButton component has text. 
-                            I'll just keep it for now as fixing w-full might solve the cut-off. 
-                            The cut-off is likely due to missing width. 
-                        */}
-                        <PremiumButton />
-                    </div>
+                    {!user?.isPremium && (
+                        <>
+                            <div className="hidden md:block">
+                                <PremiumButton />
+                            </div>
+                            <div className="md:hidden">
+                                {/* Mobile simplified premium button if possible or just show icon - but PremiumButton component has text. 
+                                    I'll just keep it for now as fixing w-full might solve the cut-off. 
+                                    The cut-off is likely due to missing width. 
+                                */}
+                                <PremiumButton />
+                            </div>
+                        </>
+                    )}
 
                     <div className="dropdown dropdown-end">
                         <label tabIndex={0} className="btn btn-ghost btn-circle avatar ring ring-primary ring-offset-base-100 ring-offset-2 hover:scale-105 transition-transform">
