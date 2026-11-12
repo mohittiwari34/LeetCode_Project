@@ -6,7 +6,7 @@ const userMiddleware = async (req, res, next) => {
     try {
         const { token } = req.cookies;
         if (!token) {
-            throw new Error("Token is not persent");
+            throw new Error("Token is not present");
         }
         const payload = jwt.verify(token, process.env.JWT_KEY);
         const { _id } = payload;
@@ -15,15 +15,15 @@ const userMiddleware = async (req, res, next) => {
         }
         const result = await User.findById(_id);
 
-
         if (!result) {
             throw new Error("User Doesn't Exist");
         }
 
-
-        const IsBlocked = await redisClient.exists(`token:${token}`);
-        if (IsBlocked) {
-            throw new Error("Invalid Token");
+        if (redisClient.isOpen) {
+            const IsBlocked = await redisClient.exists(`token:${token}`);
+            if (IsBlocked) {
+                throw new Error("Invalid Token");
+            }
         }
         req.result = result;
 
@@ -39,7 +39,8 @@ const userMiddleware = async (req, res, next) => {
 
     }
     catch (err) {
-        res.status(401).send("Error: " + err.message)
+        res.status(401).send("Error: " + err.message);
     }
-}
+};
+
 module.exports = userMiddleware;

@@ -25,20 +25,10 @@ services:
       - key: RAZORPAY_KEY_SECRET
         sync: false
       - key: REDDIS_HOST
-        fromService:
-          type: redis
-          name: codeforge-redis
-          property: host
+        sync: false
+      - key: REDDIS_PORT
+        sync: false
       - key: REDDIS_PASS
-        fromService:
-          type: redis
-          name: codeforge-redis
-          property: password
+        sync: false
       - key: FRONTEND_URL
         sync: false
-
-  - type: redis
-    name: codeforge-redis
-    ipAllowList: [] # only allow internal connections
-    plan: free
-    maxmemoryPolicy: allkeys-lru

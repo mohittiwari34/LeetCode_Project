@@ -1,4 +1,3 @@
-
 const User = require("../models/user");
 const validate = require("../utils/validator");
 const bcrypt = require('bcrypt');
@@ -8,58 +7,60 @@ const jwt = require('jsonwebtoken');
 
 const register = async (req, res) => {
     try {
-        console.log("request yaha tak pahuch rha");
-        console.log(req.body);
-        //validate(req.body);
         const { firstName, emailId, password } = req.body;
-        console.log(firstName);
-        console.log(emailId);
-        req.body.password = await bcrypt.hash(password, 10);
-        console.log(req.body.password);
-        req.body.role = 'user';
-        console.log("hi hello");
-        const user = await User.create(req.body);
-        console.log(user);
-        const token = jwt.sign({ _id: user._id, emailId: emailId, role: 'user' }, process.env.JWT_KEY, { expiresIn: 60 * 60 });
-        console.log(token);
+        if (!firstName || !emailId || !password) {
+            return res.status(400).json({ message: "All fields are required" });
+        }
+        
+        const existingUser = await User.findOne({ emailId });
+        if (existingUser) {
+            return res.status(400).json({ message: "User already exists with this email" });
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const user = await User.create({
+            ...req.body,
+            password: hashedPassword,
+            role: 'user'
+        });
+
+        const token = jwt.sign({ _id: user._id, emailId: emailId, role: 'user' }, process.env.JWT_KEY || 'default_secret', { expiresIn: 60 * 60 });
         const reply = {
             firstName: user.firstName,
             emailId: user.emailId,
             _id: user._id,
             role: user.role,
-        }
+        };
+
         res.cookie('token', token, { maxAge: 60 * 60 * 1000, httpOnly: true, secure: true, sameSite: 'None' });
         res.status(201).json({
             user: reply,
-            message: "Register Succesfully"
-        })
+            message: "Register Successfully"
+        });
 
+    } catch (err) {
+        console.error("Register error:", err);
+        res.status(400).json({ message: err.message || "Registration failed" });
     }
-    catch (err) {
-        console.log("register error mohit " + err);
-        res.status(400).send("Error: mohit" + err);
+};
 
-    }
-}
 const login = async (req, res) => {
     try {
-
         const { emailId, password } = req.body;
-        console.log(emailId);
-        console.log(password);
-        if (!emailId)
-            throw new Error("Invalid Credentials");
-        if (!password)
-            throw new Error("Invalid Credentials");
+        if (!emailId || !password) {
+            return res.status(400).json({ message: "Invalid Credentials" });
+        }
 
         const user = await User.findOne({ emailId });
-        console.log(user);
-        console.log(user.password);
-        const match = await bcrypt.compare(password, user.password);
-        console.log(match);
-        if (!match) {
-            throw new Error("Invalid Credentials");
+        if (!user || !user.password) {
+            return res.status(401).json({ message: "Invalid Credentials" });
         }
+
+        const match = await bcrypt.compare(password, user.password);
+        if (!match) {
+            return res.status(401).json({ message: "Invalid Credentials" });
+        }
+
         const reply = {
             firstName: user.firstName,
             emailId: user.emailId,
@@ -70,43 +71,40 @@ const login = async (req, res) => {
             problemSolved: user.problemSolved,
             isPremium: user.isPremium,
             premiumExpiryDate: user.premiumExpiryDate,
-        }
+        };
 
-        const token = jwt.sign({ _id: user._id, emailId: emailId, profilePhoto: user.profilePhoto, role: user.role }, process.env.JWT_KEY, { expiresIn: 60 * 60 });
+        const token = jwt.sign(
+            { _id: user._id, emailId: emailId, profilePhoto: user.profilePhoto, role: user.role },
+            process.env.JWT_KEY || 'default_secret',
+            { expiresIn: 60 * 60 }
+        );
+
         res.cookie('token', token, { maxAge: 60 * 60 * 1000, httpOnly: true, secure: true, sameSite: 'None' });
-
-        res.status(201).json({
+        res.status(200).json({
             user: reply,
-            message: "Login Succesfully"
-        })
+            message: "Login Successfully"
+        });
 
-
+    } catch (err) {
+        console.error("Login error:", err);
+        res.status(401).json({ message: err.message || "Login failed" });
     }
-    catch (err) {
-        res.status(401).send("Error: " + err);
+};
 
-    }
-}
-const client1 = new OAuth2Client("744154804557-9e4d3llkuqss6en0a5iqodtqltnopl32.apps.googleusercontent.com")
+const client1 = new OAuth2Client("744154804557-9e4d3llkuqss6en0a5iqodtqltnopl32.apps.googleusercontent.com");
+
 const googleLogin = async (req, res) => {
-    console.log("google");
     const { token1 } = req.body;
     try {
         const ticket = await client1.verifyIdToken({
             idToken: token1,
             audience: "744154804557-9e4d3llkuqss6en0a5iqodtqltnopl32.apps.googleusercontent.com"
-        })
+        });
         const payload = ticket.getPayload();
-        console.log(payload);
         const { name, email, picture } = payload;
-        console.log(name);
-        console.log(email);
-        console.log(picture);
         const emailId = email;
         const firstName = name;
         let user = await User.findOne({ emailId });
-
-        console.log(user);
 
         if (!user) {
             user = await User.create({
@@ -114,21 +112,11 @@ const googleLogin = async (req, res) => {
                 emailId,
                 provider: "google",
                 profilePhoto: picture
-            })
+            });
         }
-        console.log(user);
 
-        const token = jwt.sign({ _id: user._id, emailId: emailId, role: user.role }, process.env.JWT_KEY, { expiresIn: 60 * 60 });
-        // if (user){
-        //     return res.status(200).json({
-        //         message:"User logged in",
-        //         user,
-        //         token,
-        //     })
-        // }
-        console.log(token);
+        const token = jwt.sign({ _id: user._id, emailId: emailId, role: user.role }, process.env.JWT_KEY || 'default_secret', { expiresIn: 60 * 60 });
         res.cookie('token', token, { maxAge: 60 * 60 * 1000, httpOnly: true, secure: true, sameSite: 'None' });
-
 
         res.status(200).json({
             message: "Google login successful",
@@ -136,25 +124,31 @@ const googleLogin = async (req, res) => {
             user,
         });
 
+    } catch (err) {
+        console.error("Google login error:", err);
+        res.status(401).json({ message: "Invalid Google token", err: err.message });
     }
-    catch (err) {
-        res.status(401).json({ message: "Invalid Google token", mohit: "hlo", err });
-    }
-}
+};
+
 const logout = async (req, res) => {
     try {
         const { token } = req.cookies;
-        const payload = jwt.decode(token);
-        await redisClient.set(`token:${token}`, 'Blocked');
-        await redisClient.expireAt(`token:${token}`, payload.exp);
+        if (token && redisClient.isOpen) {
+            const payload = jwt.decode(token);
+            if (payload && payload.exp) {
+                await redisClient.set(`token:${token}`, 'Blocked');
+                await redisClient.expireAt(`token:${token}`, payload.exp);
+            }
+        }
         res.cookie("token", null, { expires: new Date(Date.now()), httpOnly: true, secure: true, sameSite: 'None' });
-        res.send("Logged Out Succesfully");
+        res.send("Logged Out Successfully");
 
+    } catch (err) {
+        console.error("Logout Error:", err);
+        res.status(500).json({ message: "Error logging out" });
     }
-    catch (err) {
-        console.log("Error: " + err);
-    }
-}
+};
+
 const adminRegister = async (req, res) => {
     try {
         validate(req.body);
@@ -163,27 +157,26 @@ const adminRegister = async (req, res) => {
         const user = await User.create(req.body);
         user.role = "admin";
         await user.save();
-        const token = jwt.sign({ _id: user._id, emailId: emailId, role: 'admin' }, process.env.JWT_KEY, { expiresIn: 60 * 60 });
+        const token = jwt.sign({ _id: user._id, emailId: emailId, role: 'admin' }, process.env.JWT_KEY || 'default_secret', { expiresIn: 60 * 60 });
         res.cookie('token', token, { maxAge: 60 * 60 * 1000, httpOnly: true, secure: true, sameSite: 'None' });
-        res.status(201).send("User Registered Succesfully");
+        res.status(201).send("User Registered Successfully");
 
-    }
-    catch (err) {
+    } catch (err) {
         res.status(400).send("Error: " + err);
     }
-}
+};
+
 const deleteProfile = async (req, res) => {
     try {
         const userId = req.result._id;
         await User.findByIdAndDelete(userId);
-        res.status(200).send("Deleted Suceesfully");
+        res.status(200).send("Deleted Successfully");
 
-    }
-    catch (err) {
+    } catch (err) {
         res.status(500).send("Internal Server Error");
-
     }
-}
+};
+
 const Submission = require("../models/submission");
 
 const updateStreak = async (req, res) => {
@@ -256,6 +249,6 @@ const getUserStats = async (req, res) => {
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
-}
+};
 
 module.exports = { register, login, googleLogin, logout, adminRegister, deleteProfile, updateStreak, getUserStats };
